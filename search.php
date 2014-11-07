@@ -8,25 +8,23 @@ $sentences=array();
 define("MAX_RULES",4);
 $query="flipkart";
 
+$query = $_POST['entity'];
 
-$page="http://en.wikipedia.org/wiki/Flipkart";
+//search for the entity on wikipedia
+
+
+
+
+$page="http://en.wikipedia.org/wiki/".urlencode($query);
+echo "Generating timeline from $page";
 //$page="http://en.wikipedia.org/wiki/Mahatma_Gandhi";
 /*$sentence="next sale is scheduled for oct 14, 2014";
 $i=20;
 process_sentence($sentence,$i);
 exit();*/
-$header = get_web_page($page);
-
-$http_code = $header['http_code'];
-
-if($http_code ==0)
-{
-  echo "Could not connect to server\n";
-  exit(1);
-}
-$content = $header['content'];
+$content = file_get_contents($page);
 process_page($content);
-printf("max_rules=%d\n",MAX_RULES);
+//printf("max_rules=%d\n",MAX_RULES);
 //Now process the rule_hits array
 
 foreach($rule_hits as $sentence_hits)
@@ -34,7 +32,7 @@ foreach($rule_hits as $sentence_hits)
   $event=array();
   foreach($sentence_hits as $hit)
   {
-    print_r($hit);
+    //print_r($hit);
     $event['sid']=$hit['sid'];
     if(isset($hit['day'])) $event['day']=$hit['day'];
     if(isset($hit['month'])) $event['month']=$hit['month'];
@@ -42,28 +40,93 @@ foreach($rule_hits as $sentence_hits)
     $eid=sprintf("%4d%02d%02d",$event['year'],$event['month'],$event['day']);
     $eid=ceil($eid);
 
-    echo "End of hit with index $eid\n";
+    //echo "End of hit with index $eid\n";
   }
   $events[$eid]=$event;
 }
 ksort($events,SORT_NUMERIC);
-print_r($events);
+//print_r($events);
+?>
+<link rel="stylesheet" type="text/css" href="time.css">
+<table>
+
+<tr>
+<td class='colname' align='center'>Time</td>
+<td class='colname' align='center'>Event</td>
+</td>
+<?php
 //printing in formatted way
 foreach($events as $event)
 {
-print_event($event);
+$arr=extract_event($event);
+if(!$arr) continue;//skip printing if it is not worth showing this
+$ts=$arr['ts'];
+$sentence=$arr['sentence'];
+?>
+
+<tr>
+<td class='colname' align='center'><?php echo $ts;?></td>
+<td class='colname' align='center'><?php echo $sentence;?></td>
+</td>
+<?php
 }
+?>
+</table>
+<?php
 $cx=count($events);
-echo "Count=$cx\n";
-function print_event($event)
+//echo "Count=$cx\n";
+function extract_event($event)
 {
 global $sentences;
 global $months;
 $year=$event['year'];
-$month=$months[$event['month']];
-$day=$event['day'];
+if(isset($months[$event['month']]))
+{
+$month=substr($months[$event['month']],0,3);
+}
+if(isset($event['day']))
+{
+$day=sprintf("%02d",$event['day']);
+}
 $sentence=$sentences[$event['sid']];
-echo "$year-$month-$day $sentence\n";
+$ret=array();
+$ts='';
+/*
+if($day=='')
+{
+}
+else
+{
+$ts.=" $day";
+}
+if($month=='')
+{
+}
+else
+{
+$ts.="-$month";
+}
+if($year=='')
+{
+ return null;
+}
+if($ts=='')
+{
+$ts=$year;
+}
+else
+{
+$ts.="-$year";
+}
+*/
+if(!isset($year))
+{
+return null;
+}
+$ts=strip_duplicate_spaces("$day $month $year");
+$ret['ts']=$ts;
+$ret['sentence']= $sentence;
+return $ret;
 }
 
 
@@ -72,7 +135,7 @@ function process_page($content)
   global $rule_hits;
   global $sentences;
   $len=strlen($content);
-  echo "Content size=$len\n";
+  //echo "Content size=$len\n";
   $docObj = new DOMDocument();
   $docObj->loadHTML( $content );
   $xpath = new DOMXPath( $docObj );
@@ -84,7 +147,7 @@ function process_page($content)
     $content .= $node->nodeValue;
     $count++;
   }
-  echo "\n\n\nCount=$count\n";
+//  echo "\n\n\nCount=$count\n";
   //do some preprocessing to  support .coms
   $content = str_replace(".[",". [",$content);
   $content = preg_replace('/[\x00-\x1F\x80-\x9F]/u', ' . ', $content);
@@ -105,17 +168,17 @@ function process_page($content)
   $content = replace_brackets($content);
   $content = strip_duplicate_spaces($content);
   $sentences = explode('. ',$content);
-  print_r($sentences);
+  //print_r($sentences);
   $count = count($sentences);
-  echo "There are $count sentences\n";
+  //echo "There are $count sentences\n";
   //ignore the last reference section
   for($i=0;$i<$count-1;$i++)
   {
     $sentence=$sentences[$i];
     process_sentence($sentence,$i);
   }
-  print_r($rule_hits);
-  printf("Number of hits=%d\n",count($rule_hits));
+  //print_r($rule_hits);
+  //printf("Number of hits=%d\n",count($rule_hits));
 }
 
 function process_sentence($sentence,$sentence_id)

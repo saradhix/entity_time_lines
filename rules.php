@@ -16,8 +16,8 @@ function rule_0($sentence,$sentence_id)
   {
     if($year=is_year($arr[$i]))
     {
-      printf("rule_0::match found for %s in sentence %s on fragment=%d\n",
-             $arr[$i],$sentence,$i);
+      //printf("rule_0::match found for %s in sentence %s on fragment=%d\n",
+        //     $arr[$i],$sentence,$i);
       $hit=array();
       $hit["sid"]=$sentence_id;
       $hit["rule"]=0;
@@ -97,6 +97,7 @@ function rule_3($sentence, $sentence_id)
   global $months;
   $present_months=array();
   $max_months=count($months);
+  $sentence=str_replace(",","",$sentence);
   for($i=0;$i<$max_months;$i++)
   {
     for($day=31;$day>0;$day--)
