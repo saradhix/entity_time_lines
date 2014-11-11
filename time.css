@@ -72,3 +72,88 @@ background-color: #888888;
 .cancelled { background-color: #dddddd; }
 .aborted { background-color: #dddddd; }
 .batch_separator { background-color: #eeeeee; }
+
+
+/* Line 1 */
+button, input, select, textarea
+{
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+}
+
+/* Line 1 */
+button, input, select, textarea
+{
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Line 1 */
+button, input, select[multiple], textarea
+{
+  background-image: none;
+}
+/* Line 1 */
+button, input, select, textarea
+{
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+}
+
+/* Line 1 */
+.border-box, .border-box *, .border-box *:after, .border-box *:before, .border-box:after, .border-box:before
+{
+  box-sizing: border-box;
+}
+
+/* Line 1 */
+.search-form-input
+{
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width-value: 1px;
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-left-style-value: solid;
+  border-top-color: #d4d4d4;
+  border-bottom-color: #d4d4d4;
+  border-left-color-value: #d4d4d4;
+  border-image-source: none;
+  border-image-slice: 100% 100% 100% 100%;
+  border-image-width: 1 1 1 1;
+  border-image-outset: 0 0 0 0;
+  border-image-repeat: stretch stretch;
+  border-right-width-value: 0px;
+  border-right-style-value: none;
+  float: left;
+  font-size: 1.57143em;
+  height: 2.90909em;
+  max-width: 660px;
+  padding-top: 0.772727em;
+  padding-right: 1.04545em;
+  padding-bottom: 0.818182em;
+  padding-left: 1.04545em;
+  vertical-align: middle;
+  width: 78.5714%;
+}
+/* Line 1 */
+.border-box, .border-box *, .border-box *:after, .border-box *:before, .border-box:after, .border-box:before
+{
+  box-sizing: border-box;
+}
+
+/* Line 1 */
+.clearfix
+{
+}
+.submitbtn {
+    float: right;
+    left: 55%;
+    max-width: 350px;
+}
+

@@ -115,7 +115,7 @@ function rule_3($sentence, $sentence_id)
         $hit["search"]=$str;
         $rule_hits[$sentence_id][]=$hit;
       }
-      $str=$day." ".substr(strtolower($months[$i]),0,3);
+      $str=" ".$day." ".substr(strtolower($months[$i]),0,3);
       //echo "rule3 checking $str\n";
       if(strstr($sentence,$str))
       {

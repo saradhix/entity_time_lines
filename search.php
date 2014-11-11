@@ -1,12 +1,12 @@
 <?php
 include "libcurl.php";
 include "rules.php";
+include "libwiki.php";
 
 $rule_hits=array();
 $sentences=array();
 
 define("MAX_RULES",4);
-$query="flipkart";
 
 $query = $_POST['entity'];
 
@@ -15,7 +15,14 @@ $query = $_POST['entity'];
 
 
 
-$page="http://en.wikipedia.org/wiki/".urlencode($query);
+$page=get_wiki_title($query);
+if(!$page)
+{
+    echo "Can not find sufficient information on wikipedia";
+    exit(1);
+}
+$page=str_replace(" ","_",$page);
+$page="http://en.wikipedia.org/wiki/".$page;
 echo "Generating timeline from $page";
 //$page="http://en.wikipedia.org/wiki/Mahatma_Gandhi";
 /*$sentence="next sale is scheduled for oct 14, 2014";
@@ -47,13 +54,17 @@ foreach($rule_hits as $sentence_hits)
 ksort($events,SORT_NUMERIC);
 //print_r($events);
 ?>
+<html>
+<head>
 <link rel="stylesheet" type="text/css" href="time.css">
+</head>
+<body>
 <table>
 
 <tr>
 <td class='colname' align='center'>Time</td>
 <td class='colname' align='center'>Event</td>
-</td>
+</tr>
 <?php
 //printing in formatted way
 foreach($events as $event)
@@ -62,16 +73,19 @@ $arr=extract_event($event);
 if(!$arr) continue;//skip printing if it is not worth showing this
 $ts=$arr['ts'];
 $sentence=$arr['sentence'];
+$sentence = preg_replace('/[\x00-\x1F\x80-\xFF]/', ' ', $sentence);
 ?>
 
 <tr>
-<td class='colname' align='center'><?php echo $ts;?></td>
-<td class='colname' align='center'><?php echo $sentence;?></td>
-</td>
+<td align='left'><?php echo $ts;?></td>
+<td align='left'><?php echo $sentence;?></td>
+</tr>
 <?php
 }
 ?>
 </table>
+</body>
+</html>
 <?php
 $cx=count($events);
 //echo "Count=$cx\n";
@@ -137,7 +151,7 @@ function process_page($content)
   $len=strlen($content);
   //echo "Content size=$len\n";
   $docObj = new DOMDocument();
-  $docObj->loadHTML( $content );
+  @$docObj->loadHTML( $content );
   $xpath = new DOMXPath( $docObj );
   $nodes=$xpath->query('//div[@id="bodyContent"]');
   $count=0;
