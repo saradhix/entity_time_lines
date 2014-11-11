@@ -132,6 +132,26 @@ function rule_3($sentence, $sentence_id)
   }
 }
 
+function rule_4($sentence, $sentence_id)
+{
+    //echo "entered rule_4 with $sentence\n";
+    global $verbs;
+    $fp=fopen("past.txt","r");
+    while($verb=fgets($fp))
+    {
+        $verb=trim($verb);
+        $search=" $verb ";
+        if(stristr($sentence, $search))
+        {
+            $verbs[$sentence_id]=$verb;
+            //printf("Found %s in %s\n",$verb,$sentences[$sentence_id]);
+            //print_r($verbs);
+            //exit();
+        }
+    }
+    fclose($fp);
+}
+
 function is_year($part)
 {
   $year=substr($part,0,4);

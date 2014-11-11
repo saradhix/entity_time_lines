@@ -5,8 +5,9 @@ include "libwiki.php";
 
 $rule_hits=array();
 $sentences=array();
+$verbs=array();
 
-define("MAX_RULES",4);
+define("MAX_RULES",5);
 
 $query = $_GET['entity'];
 
@@ -65,6 +66,7 @@ ksort($events,SORT_NUMERIC);
 <tr>
 <td class='colname' align='center'>Time</td>
 <td class='colname' align='center'>Event</td>
+<td class='colname' align='center'>Verb</td>
 </tr>
 <?php
 //printing in formatted way
@@ -75,11 +77,13 @@ if(!$arr) continue;//skip printing if it is not worth showing this
 $ts=$arr['ts'];
 $sentence=$arr['sentence'];
 $sentence = preg_replace('/[\x00-\x1F\x80-\xFF]/', ' ', $sentence);
+$verb = $arr['verb'];
 ?>
 
 <tr>
 <td align='left'><?php echo $ts;?></td>
 <td align='left'><?php echo $sentence;?></td>
+<td align='left'><?php echo $verb;?></td>
 </tr>
 <?php
 }
@@ -94,6 +98,9 @@ function extract_event($event)
 {
 global $sentences;
 global $months;
+global $verbs;
+//print_r($verbs);
+//print_r($event);//exit();
 
 
 
@@ -109,6 +116,7 @@ if(isset($event['day']))
 $day=sprintf("%02d",$event['day']);
 }
 $sentence=$sentences[$event['sid']];
+
 /*If the sentence has "Retrieved", then dont send it, as it is from retrievals section*/
 if(strstr($sentence,"Retrieved "))
 {
@@ -117,41 +125,19 @@ if(strstr($sentence,"Retrieved "))
 
 $ret=array();
 $ts='';
-/*
-if($day=='')
-{
-}
-else
-{
-$ts.=" $day";
-}
-if($month=='')
-{
-}
-else
-{
-$ts.="-$month";
-}
-if($year=='')
-{
- return null;
-}
-if($ts=='')
-{
-$ts=$year;
-}
-else
-{
-$ts.="-$year";
-}
-*/
+
 if(!isset($year))
 {
 return null;
 }
+$sid=$event['sid'];
 $ts=strip_duplicate_spaces("$day $month $year");
 $ret['ts']=$ts;
 $ret['sentence']= $sentence;
+$ret['sid']=$sid;
+$ret['verb']=$verbs[$sid];
+//print_r($ret);
+//exit();
 return $ret;
 }
 
