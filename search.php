@@ -24,7 +24,7 @@ if(!$page)
 }
 $page=str_replace(" ","_",$page);
 $page="http://en.wikipedia.org/wiki/".$page;
-echo "<h1>Generating timeline from <a href='$page' target='new'>$title</a><h1>";
+echo "<h1>Generating timeline for <a href='$page' target='new'>$title</a><h1>";
 //$page="http://en.wikipedia.org/wiki/Mahatma_Gandhi";
 /*$sentence="next sale is scheduled for oct 14, 2014";
 $i=20;
