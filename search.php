@@ -8,7 +8,7 @@ $sentences=array();
 
 define("MAX_RULES",4);
 
-$query = $_POST['entity'];
+$query = $_GET['entity'];
 
 //search for the entity on wikipedia
 
@@ -16,6 +16,7 @@ $query = $_POST['entity'];
 
 
 $page=get_wiki_title($query);
+$title=$page;
 if(!$page)
 {
     echo "Can not find sufficient information on wikipedia";
@@ -23,7 +24,7 @@ if(!$page)
 }
 $page=str_replace(" ","_",$page);
 $page="http://en.wikipedia.org/wiki/".$page;
-echo "Generating timeline from $page";
+echo "<h1>Generating timeline from <a href='$page' target='new'>$title</a><h1>";
 //$page="http://en.wikipedia.org/wiki/Mahatma_Gandhi";
 /*$sentence="next sale is scheduled for oct 14, 2014";
 $i=20;
@@ -93,6 +94,11 @@ function extract_event($event)
 {
 global $sentences;
 global $months;
+
+
+
+
+
 $year=$event['year'];
 if(isset($months[$event['month']]))
 {
@@ -103,6 +109,12 @@ if(isset($event['day']))
 $day=sprintf("%02d",$event['day']);
 }
 $sentence=$sentences[$event['sid']];
+/*If the sentence has "Retrieved", then dont send it, as it is from retrievals section*/
+if(strstr($sentence,"Retrieved "))
+{
+    return null;
+}
+
 $ret=array();
 $ts='';
 /*

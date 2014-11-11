@@ -29,10 +29,10 @@
 <!-- Start main-panel -->
 <section class="white-bg main-panel">
 <h2 class="main-panel-title">Find the perfect timeline for any entity</h2>
-<form method="post" action="search.php" class="search-form" id="domain_search_form" style="margin: 0 auto 20px;">
+<form method="GET" action="search.php" class="search-form" id="domain_search_form" style="margin: 0 auto 20px;">
 <div class="searchBoxForm">
 <input type="text" name="entity" placeholder="Enter any entity name Ex: mahatma gandhi" class="search-form-input" id="domain_search_input" autocomplete="off"  style="width:auto; border:none;outline:0;min-width: 500px;" />
-<button type="submit" name="searchButton" data-ci="88002" class="btn btn-primary btn-search-form submitbtn">Find</button>
+<button type="submit" class="btn btn-primary btn-search-form submitbtn">Find</button>
 <div class="clearfix"></div>
 </div>
 </form>
