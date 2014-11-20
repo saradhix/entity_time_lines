@@ -1,5 +1,4 @@
 <?php
-include "libcurl.php";
 include "rules.php";
 include "libwiki.php";
 
@@ -25,7 +24,6 @@ if(!$page)
 }
 $page=str_replace(" ","_",$page);
 $page="http://en.wikipedia.org/wiki/".$page;
-echo "<h1>Generating timeline for <a href='$page' target='new'>$title</a><h1>";
 //$page="http://en.wikipedia.org/wiki/Mahatma_Gandhi";
 /*$sentence="next sale is scheduled for oct 14, 2014";
 $i=20;
@@ -59,14 +57,28 @@ ksort($events,SORT_NUMERIC);
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="time.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("a").click(function(){
+    $.ajax({url:this.href,success:function(result){
+      $("#div1").html(result);
+    }});
+  });
+});
+</script>
+
 </head>
 <body>
+<?php echo "<h1>Generating timeline for <a href='$page' target='new'>$title</a><h1>";?>
+<div id="div1" class='colname'></div>
 <table>
 
 <tr>
 <td class='colname' align='center'>Time</td>
 <td class='colname' align='center'>Event</td>
 <td class='colname' align='center'>Verb</td>
+<td class='colname' align='center'>Not Relevant</td>
 </tr>
 <?php
 //printing in formatted way
@@ -84,6 +96,7 @@ $verb = $arr['verb'];
 <td align='left'><?php echo $ts;?></td>
 <td align='left'><?php echo $sentence;?></td>
 <td align='left'><?php echo $verb;?></td>
+<td align='left'><a href="not_relevant.php?t=<?php echo urlencode($sentence);?>" onclick="return false;">Not Relevant</a></td>
 </tr>
 <?php
 }
@@ -131,6 +144,7 @@ if(!isset($year))
 return null;
 }
 $sid=$event['sid'];
+if(!$verbs[$sid]) return null;
 $ts=strip_duplicate_spaces("$day $month $year");
 $ret['ts']=$ts;
 $ret['sentence']= $sentence;
